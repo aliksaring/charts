@@ -1,2 +1,2 @@
-# csi-scaleio-helm-chart
-Helm Chart for ScaleIO CSI Driver
+# csi-vxflex-helm-chart
+Helm Chart for VxFlex OS CSI Driver
