@@ -1,4 +1,5 @@
-# VxFlex Open Storage CSI Driver
+# Dell EMC VxFlex Open Storage CSI Driver
+> **NOTE:** Dell EMC VxFlex Open Storage was previously known as _ScaleIO_.
 
 ## TL;DR;
 
