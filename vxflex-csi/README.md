@@ -1,7 +1,5 @@
 # VxFlex Open Storage CSI Driver
 
-> **NOTE**: This chart is a work in progress and not yet ready for production use.
-
 ## TL;DR;
 
 Add the repo (if you haven't already):
@@ -21,8 +19,9 @@ This chart bootstraps the VxFlexOS CSI driver on a [Kubernetes](http://kubernete
 ## Prerequisites
 
 - Kubernetes 1.9+ with Beta APIs enabled
-- VxFlexOS Storage Data Client (SDC) deployed and configured on each Kubernetes worker node
-- Configured VxFlexOS storage system
+- VxFlex OS storage data client (SDC) deployed and configured on each Kubernetes worker node
+- VxFlex OS REST API gateway (with approved VxFlex certificate)
+- VxFlex OS configured storage pool
 
 ## Installing the Chart
 
@@ -40,17 +39,17 @@ There are a number of required values that must be set either via the command-li
 To uninstall/delete the `my-release` deployment:
 
 ```bash
-$ helm delete my-release
+$ helm delete my-release [--purge]
 ```
 
-The command removes all the Kubernetes components associated with the chart and deletes the release.
+The command removes all the Kubernetes components associated with the chart and deletes the release. The purge option also removes the provisioned release name, so that the name itself can also be reused.
 
 ## Configuration
 
 The following table lists the primary configurable parameters of the VxFlexOS driver chart and their default values. More detailed information can be found in the [`values.yaml`](values.yaml) file in this repository.
 
-| Parameter                  | Description | Required | Default |
-| -----------------------    | ----------- | -------- |-------- |
+| Parameter | Description | Required | Default |
+| --------- | ----------- | -------- |-------- |
 | systemName | Name of the VxFlex system   | true | - |
 | username | Admin user of the VxFlex system   | true | - |
 | password | Admin password of the VxFlex system   | true | - |
@@ -65,14 +64,24 @@ The following table lists the primary configurable parameters of the VxFlexOS dr
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```bash
-$ helm install --name my-release \
-  --set systemName=vxflex,username=admin,password=vxflex123,restGateway=https://123.0.0.1 \
+$ helm install --name vxflex-csi --namespace vxflex \
+  --set systemName=vxflex,username=admin,password=vxflex123,restGateway=https://123.0.0.1,storagePool=sp \
     vxflex-csi
 ```
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```bash
 $ helm install --name my-release -f values.yaml vxflex-csi
+```
+
+```yaml
+# values.yaml
+
+systemName: vxflex
+username: admin
+password: vxflex123
+restGateway: 123.0.0.1
+storagePool: sp
 ```
 
 > **Tip**: You can add required parameters and then use the default [`values.yaml`](values.yaml)

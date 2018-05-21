@@ -10,7 +10,7 @@
 
 # "restGateway" defines the VxFlex OS REST API endpoint, with full URL, typically
 # leveraging HTTPS.
-# restGateway: https://192.168.77.31
+# restGateway: https://123.0.0.1
 
 # "storagePool" defines the VxFlex storage pool from which this driver will
 # provision volumes.
