@@ -5,7 +5,7 @@ This repository provides all VxFlex Open Storage related packages for [Kubernete
 To add this repository to your local Helm installation:
 
 ```bash
-$ helm repo add https://vxflex-os.github.io/charts
+$ helm repo add vxflex https://vxflex-os.github.io/charts
 ```
 Available Charts:
 * [VxFlex Open Storage CSI Driver](vxflex-csi)

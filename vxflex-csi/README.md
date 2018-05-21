@@ -1,10 +1,12 @@
 # VxFlex Open Storage CSI Driver
 
+> **NOTE**: This chart is a work in progress and not yet ready for production use.
+
 ## TL;DR;
 
 Add the repo (if you haven't already):
 ```bash
-$ helm repo add https://vxflex-os.github.io/charts
+$ helm repo add vxflex https://vxflex-os.github.io/charts
 ```
 
 Install the driver:
@@ -56,7 +58,7 @@ The following table lists the primary configurable parameters of the VxFlexOS dr
 | storagePool | VxFlex Storage Pool to use with in the Kubernetes storage class | true | - |
 | volumeNamePrefix | String to prepend to any volumes created by the driver | false | csivol |
 | controllerCount | Number of driver controllers to create | false | 1 |
-| storageClass.name | Name of the storage class to be defined | false | VxFlex |
+| storageClass.name | Name of the storage class to be defined | false | vxflex |
 | storageClass.isDefault | Whether or not to make this storage class the default | false | true |
 | storageClass.reclaimPolicy | What should happen when a volume is removed | false | Delete |
 
