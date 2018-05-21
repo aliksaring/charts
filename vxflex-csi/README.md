@@ -4,7 +4,7 @@
 
 Add the repo (if you haven't already):
 ```bash
-$ helm repo add https://vxflex-os.github.com/charts
+$ helm repo add https://vxflex-os.github.io/charts
 ```
 
 Install the driver:
