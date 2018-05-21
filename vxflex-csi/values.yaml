@@ -18,7 +18,7 @@
 
 # "volumeNamePrefix" defines a string prepended to each volume created by the
 # CSI driver.
-volumeNamePrefix: csivol
+volumeNamePrefix: vxvol
 
 # "controllerCount" defines the number of VxFlex controller nodes to deploy to
 # the Kubernetes release
@@ -42,7 +42,7 @@ images:
 
 storageClass:
   # "storageClass.name" defines the name of the storage class to be defined.
-  name: VxFlex
+  name: vxflex
 
   # "storageClass.isDefault" defines whether the storage class should be the
   # default.
