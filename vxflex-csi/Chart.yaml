@@ -1,0 +1,17 @@
+name: vxflex-csi
+version: 0.0.1
+appVersion: 2.6.0
+description: |
+  VxFlex Open Storage CSI (Container Storage Interface) driver Kubernetes
+  integration. This chart includes everything required to provision via CSI as
+  well as a VxFlex OS StorageClass.
+keywords:
+- csi
+- storage
+home: https://github.com/VxFlex-OS/charts/blob/master/vxflex-csi
+icon: https://avatars1.githubusercontent.com/u/34447988?s=400&u=fb03ca7aec604fdbfc2840aaec016f53e2bbb020&v=4
+sources:
+- https://github.com/VxFlex-OS/charts/blob/master/vxflex-csi
+maintainers:
+- name: spiegela
+engine: gotpl

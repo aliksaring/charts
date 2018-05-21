@@ -1,0 +1,116 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Release.Name }}-controller
+  namespace: {{ .Release.Namespace }}
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ .Release.Name }}-controller
+rules:
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["list", "watch", "create", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete", "update"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["volumeattachments"]
+    verbs: ["get", "list", "watch", "update"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ .Release.Name }}-controller
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Release.Name }}-controller
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: {{ .Release.Name }}-controller
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: StatefulSet
+apiVersion: apps/v1beta1
+metadata:
+  name: {{ .Release.Name }}-controller
+  namespace: {{ .Release.Namespace }}
+spec:
+  serviceName: {{ .Release.Name }}-controller
+  replicas: {{ required "Must supply the number of controller instances to create." .Values.controllerCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-controller
+    spec:
+      serviceAccount: {{ .Release.Name }}-controller
+      containers:
+        - name: attacher
+          image: {{ required "Must provide the CSI attacher container image." .Values.images.attacher }}
+          args:
+            - "--csi-address=$(ADDRESS)"
+            - "--v=5"
+          env:
+            - name: ADDRESS
+              value: /var/run/csi/csi.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /var/run/csi
+        - name: provisioner
+          image: {{ required "Must provide the CSI provider container image." .Values.images.provisioner }}
+          args:
+            - "--csi-address=$(ADDRESS)"
+            - "--provisioner=csi-scaleio"
+            - "--volume-name-prefix={{ required "Must supply a value to prefix to driver created volume names" .Values.volumeNamePrefix }}"
+            - "--volume-name-uuid-length=10"
+            - "--connection-timeout=300s"
+            - "--v=5"
+          env:
+            - name: ADDRESS
+              value: /var/run/csi/csi.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /var/run/csi
+        - name: agent
+          image: {{ required "Must provide the VxFlex OS agent container image." .Values.images.agent }}
+          command: [ "/csi-scaleio" ]
+          env:
+            - name: CSI_ENDPOINT
+              value: /var/run/csi/csi.sock
+            - name: X_CSI_MODE
+              value: controller
+            - name: X_CSI_DEBUG
+              value: "true"
+            - name: X_CSI_SCALEIO_ENDPOINT
+              value: {{ required "Must supply a VxFlex OS REST API gateway HTTPS endpoint." .Values.restGateway }}
+            - name: X_CSI_SCALEIO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-creds
+                  key: username
+            - name: X_CSI_SCALEIO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-creds
+                  key: password
+            - name: X_CSI_SCALEIO_INSECURE
+              value: "true"
+            - name: X_CSI_SCALEIO_SYSTEMNAME
+              value: {{ required "A VxFlex OS system name must be provided" .Values.systemName }}
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /var/run/csi
+      volumes:
+        - name: socket-dir
+          emptyDir:
