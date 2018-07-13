@@ -10,7 +10,7 @@ $ helm repo add vxflex https://vxflex-os.github.io/charts
 
 Install the driver:
 ```bash
-$ helm install --name vxflex-csi --namespace vxflexos --values=myvals.yaml
+$ helm install --name vxflex-csi --namespace vxflexos --values=myvals.yaml vxflex/vxflex-csi
 ```
 
 ## Introduction
@@ -29,7 +29,7 @@ This chart bootstraps the VxFlexOS CSI driver on a [Kubernetes](http://kubernete
 To install the chart with the release name `my-release`:
 
 ```bash
-$ helm install --name my-release --values=myvals.yaml vxflex-csi
+$ helm install --name my-release --values=myvals.yaml vxflex/vxflex-csi
 ```
 > **Tip**: List all releases using `helm list`
 
@@ -67,12 +67,12 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 ```bash
 $ helm install --name vxflex-csi --namespace vxflex \
   --set systemName=vxflex,username=admin,password=vxflex123,restGateway=https://123.0.0.1,storagePool=sp \
-    vxflex-csi
+    vxflex/vxflex-csi
 ```
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```bash
-$ helm install --name my-release -f values.yaml vxflex-csi
+$ helm install --name my-release -f values.yaml vxflex/vxflex-csi
 ```
 
 ```yaml
