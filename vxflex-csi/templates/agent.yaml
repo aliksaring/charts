@@ -48,7 +48,19 @@ spec:
     spec:
       serviceAccount: {{ .Release.Name }}-agent
       hostNetwork: true
-      containers:
+      initContainers:
+        - name: register-sdc
+          securityContext:
+            privileged: true
+            capabilities:
+              add: ["SYS_ADMIN"]
+            allowPrivilegeEscalation: true
+          image: ubuntu
+          command: ["/bin/bash","-c","/usr/bin/apt-get update && /usr/bin/apt install -y libnuma1 libaio1 && /opt/emc/scaleio/sdc/bin/drv_cfg --add_mdm --ip {{ required "MDM IP required" .Values.mdmIP }}"]
+          volumeMounts:
+            - name: scaleio-path-bin
+              mountPath: /opt/emc/scaleio/sdc/bin
+      containers:  
         - name: agent
           securityContext:
             privileged: true
@@ -73,8 +85,8 @@ spec:
               mountPropagation: "Bidirectional"
             - name: dev
               mountPath: /dev
-            - name: scaleio-path-opt
-              mountPath: /opt/emc
+            - name: scaleio-path-bin
+              mountPath: /opt/emc/scaleio/sdc/bin
             - name: scaleio-path-bin
               mountPath: /bin/emc
         - name: driver-registrar
@@ -111,5 +123,5 @@ spec:
             type: Directory
         - name: scaleio-path-bin
           hostPath:
-            path: /bin/emc
+            path: {{ required "Location of drv_cfg binary" .Values.scaleio-path-bin }}
             type: Directory
