@@ -61,6 +61,7 @@ The following table lists the primary configurable parameters of the VxFlexOS dr
 | storageClass.name | Name of the storage class to be defined | false | vxflex |
 | storageClass.isDefault | Whether or not to make this storage class the default | false | true |
 | storageClass.reclaimPolicy | What should happen when a volume is removed | false | Delete |
+| scaleio-path-bin | Location of the drv_cfg binary on the agent host | false | /bin/emc |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
