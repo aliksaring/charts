@@ -48,6 +48,16 @@ spec:
     spec:
       serviceAccount: {{ .Release.Name }}-agent
       hostNetwork: true
+      initContainers:
+      - command:
+        - rm
+        - -rf
+        - /var/lib/kubelet/plugins/com.thecodeteam.scaleio/csi.sock
+        image: alpine:3.7
+        name: init-rm-csi-sock
+        volumeMounts:
+        - mountPath: /var/lib/kubelet/plugins/com.thecodeteam.scaleio
+          name: driver-path
       containers:
         - name: agent
           securityContext:

@@ -1,5 +1,5 @@
 name: vxflex-csi
-version: 0.0.1
+version: 0.0.2
 appVersion: 2.6.0
 description: |
   VxFlex Open Storage CSI (Container Storage Interface) driver Kubernetes
