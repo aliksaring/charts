@@ -33,7 +33,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ---
 kind: DaemonSet
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 metadata:
   name: {{ .Release.Name }}-agent
   namespace: {{ .Release.Namespace }}
@@ -92,6 +92,7 @@ spec:
           args:
             - "--v=5"
             - "--csi-address=$(ADDRESS)"
+            - --kubelet-registration-path=/var/lib/kubelet/plugins/com.thecodeteam.scaleio/csi.sock
           env:
             - name: ADDRESS
               value: /var/run/csi/csi.sock
@@ -102,6 +103,8 @@ spec:
           volumeMounts:
             - name: driver-path
               mountPath: /var/run/csi
+            - name: registration-dir
+              mountPath: /registration
       volumes:
         - name: driver-path
           hostPath:
@@ -123,3 +126,8 @@ spec:
           hostPath:
             path: /bin/emc
             type: Directory
+        - name: registration-dir
+          hostPath:
+            path: /var/lib/kubelet/plugins
+            type: Directory
+
