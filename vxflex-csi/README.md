@@ -65,7 +65,7 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 
 ```bash
 $ helm install --name vxflex-csi --namespace vxflex \
-  --set systemName=vxflex,username=admin,password=vxflex123,restGateway=https://123.0.0.1,storagePool=sp \
+  --set systemName=vxflex,username=admin,password=vxflex123,restGateway=https://123.0.0.1/api,storagePool=sp \
     vxflex-csi
 ```
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
