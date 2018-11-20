@@ -84,7 +84,7 @@ spec:
               mountPath: /var/run/csi
         - name: agent
           image: {{ required "Must provide the VxFlex OS agent container image." .Values.images.agent }}
-          command: [ "/csi-scaleio" ]
+          command: [ "/vxflexos-csi" ]
           env:
             - name: CSI_ENDPOINT
               value: /var/run/csi/csi.sock
